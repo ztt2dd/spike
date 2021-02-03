@@ -1,0 +1,29 @@
+# 分页设置及JWT秘钥
+[app]
+PageSize = 10
+JwtSecret = fdgafjas
+PrefixUrl = http://127.0.0.1:8888
+
+# 服务设置及运行模式
+[server]
+#debug or release
+RunMode = debug
+HttpPort = 8888
+ReadTimeout = 60
+WriteTimeout = 60
+
+# 数据库设置
+[database]
+Type = mysql
+User =
+Password =
+Host = host:3306
+Name =
+
+# redis设置
+[redis]
+Host = host:6379
+Password =
+MaxIdle = 30
+MaxActive = 30
+IdleTimeout = 200
