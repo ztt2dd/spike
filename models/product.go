@@ -35,7 +35,7 @@ func UpdateProduct(id int, data interface{}) error {
 // 根据ID获取商品
 func GetProductById(id int) (*Product, error) {
 	var product Product
-	err := db.Where("id = ? ", id, 0).First(&product).Error
+	err := db.Where("id = ? ", id).First(&product).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -45,8 +45,10 @@ func GetProductById(id int) (*Product, error) {
 // 分页获取商品数据
 func GetProductByPage(pageNum int, pageSize int, productName string) ([]*Product, error) {
 	var products []*Product
-	productName = "%'" + productName + "'%"
-	db = db.Where("product_name like ?", productName)
+	if productName != "" {
+		productName = "'%" + productName + "%'"
+		db = db.Where("product_name like ?", productName)
+	}
 	db = db.Offset(pageNum).Limit(pageSize)
 	err := db.Find(&products).Error
 	if err != nil && err != gorm.ErrRecordNotFound {

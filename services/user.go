@@ -14,19 +14,7 @@ type User struct {
 	Token string `json:"token"`
 }
 
-type IUserService interface {
-	// 新增用户
-	AddUser(name string, password string) (int, error)
-	// 用户授权登录
-	GetAuth(name string, password string) (*models.User, error)
-	// 获取用户信息
-	GetUserInfo(id int) (*models.User, error)
-}
-
-type UserService struct {
-}
-
-func (u *UserService) AddUser(name string, password string) (int, error) {
+func AddUser(name string, password string) (int, error) {
 	err := models.AddUser(name, password)
 	if err != nil {
 		return 0, err
@@ -34,7 +22,7 @@ func (u *UserService) AddUser(name string, password string) (int, error) {
 	return 1, nil
 }
 
-func (u *UserService) GetAuth(name string, password string) (*User, error) {
+func GetAuth(name string, password string) (*User, error) {
 	id, err := models.CheckUserAuth(name, password)
 	if err != nil {
 		return nil, err
@@ -66,7 +54,7 @@ func (u *UserService) GetAuth(name string, password string) (*User, error) {
 	return nil, nil
 }
 
-func (u *UserService) GetUserInfo(id int) (*models.User, error) {
+func GetUserInfo(id int) (*models.User, error) {
 	key := cacheService.GetUserKey(id)
 	var user *models.User
 	userRData, err := redis.GetData(key)

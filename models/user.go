@@ -4,6 +4,8 @@ type User struct {
 	ID       int    `gorm:"primary_key" json:"id"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
+	CreateAt int    `json:"createAt"`
+	ModifyAt int    `json:"modifyAt"`
 }
 
 func AddUser(name string, password string) error {

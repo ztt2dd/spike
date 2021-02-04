@@ -4,13 +4,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"spikeKill/models"
+	"spikeKill/pkg/app"
 	"spikeKill/pkg/e"
+	"spikeKill/pkg/setting"
+	"spikeKill/pkg/util"
 	"spikeKill/services"
 	"strconv"
 )
 
 // 新增商品
 func AddProduct(c *gin.Context) {
+	appG := app.Gin{C: c}
 	productName := c.Query("productName")
 	productNumStr := c.Query("productNum")
 	productNum, err := strconv.Atoi(productNumStr)
@@ -21,21 +25,33 @@ func AddProduct(c *gin.Context) {
 	data["productName"] = productName
 	data["productNum"] = productNum
 	// 处理参数后通过service层处理逻辑
-	productService := new(services.ProductService)
-	_, err = productService.AddProduct(data)
-	if err != nil {
-
-	}
+	_, err = services.AddProduct(data)
 	code := e.SUCCESS
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	if err != nil {
+		code = e.ERROR
+	}
+	appG.Response(http.StatusOK, code, nil)
+}
+
+// 新增活动
+func AddActive(c *gin.Context) {
+	appG := app.Gin{C: c}
+	code := e.SUCCESS
+	productIdStr := c.Query("productId")
+	productId, err := strconv.Atoi(productIdStr)
+	if err != nil {
+		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+	}
+	err = services.AddProductSpike(productId)
+	if err != nil {
+		code = e.ERROR
+	}
+	appG.Response(http.StatusOK, code, nil)
 }
 
 // 更新商品
 func UpdateProduct(c *gin.Context) {
+	appG := app.Gin{C: c}
 	idStr := c.Query("id")
 	productName := c.Query("productName")
 	productNumStr := c.Query("productNum")
@@ -51,22 +67,17 @@ func UpdateProduct(c *gin.Context) {
 	data := make(map[string]interface{})
 	data["product_name"] = productName
 	data["product_num"] = productNum
-	models.UpdateProduct(id, data)
+	_, err = services.UpdateProduct(id, data)
+	if err != nil {
+		code = e.ERROR
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
-}
-
-// 查询指定商品
-func SelectProduct(c *gin.Context) {
-
+	appG.Response(http.StatusOK, code, nil)
 }
 
 // 分页查询全部商品
 func SelectProductAll(c *gin.Context) {
+	appG := app.Gin{C: c}
 	productName := c.Query("productName")
 	// 构造查询参数maps
 	maps := make(map[string]interface{})
@@ -78,14 +89,12 @@ func SelectProductAll(c *gin.Context) {
 	}
 
 	// 获取列表数据
-	//data["list"] = models.GetProductByPage(util.GetPage(c), setting.AppSetting.PageSize, maps)
-	data["total"] = models.GetProductTotal(maps)
-
 	code := e.SUCCESS
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
-
+	list, err := models.GetProductByPage(util.GetPage(c), setting.AppSetting.PageSize, productName)
+	if err != nil {
+		code = e.ERROR
+	}
+	data["list"] = list
+	data["total"] = models.GetProductTotal(maps)
+	appG.Response(http.StatusOK, code, data)
 }

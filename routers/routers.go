@@ -46,5 +46,11 @@ func InitRouter() *gin.Engine {
 		apiProduct.GET("/selectProductAll", controller.SelectProductAll)
 	}
 
+	apiOrder := r.Group("/order")
+	{
+		apiOrder.POST("/addOrder", controller.AddOrder)
+		apiOrder.POST("/addActive", controller.AddActive)
+	}
+
 	return r
 }

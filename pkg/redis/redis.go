@@ -59,7 +59,7 @@ func SetData(key string, data interface{}) error {
 		return err
 	}
 
-	_, err = conn.Do("EXPIRE", key, 3600)
+	_, err = conn.Do("EXPIRE", key, 24*3600)
 	if err != nil {
 		return err
 	}
