@@ -16,13 +16,10 @@ func init() {
 	setting.Setup()
 	models.Setup()
 	util.Setup()
-	err := redis.Setup()
-	if err != nil {
-		log.Println("redis连接失败：", err)
-	}
+	redis.Setup()
 }
 
-func main() {
+func server() {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
 	routersInit := routers.InitRouter()
@@ -42,4 +39,8 @@ func main() {
 	log.Printf("[info] start http server listening %s", endPoint)
 
 	server.ListenAndServe()
+}
+
+func main() {
+	server()
 }

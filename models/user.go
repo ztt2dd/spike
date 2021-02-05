@@ -8,6 +8,7 @@ type User struct {
 	ModifyAt int    `json:"modifyAt"`
 }
 
+// 新增用户
 func AddUser(name string, password string) error {
 	err := db.Create(&User{
 		Name:     name,
@@ -16,6 +17,7 @@ func AddUser(name string, password string) error {
 	return err
 }
 
+// 用户登录验证
 func CheckUserAuth(name, password string) (int, error) {
 	var user User
 	err := db.Select("id").Where(User{Name: name, Password: password}).First(&user).Error
@@ -29,6 +31,7 @@ func CheckUserAuth(name, password string) (int, error) {
 	return 0, nil
 }
 
+// 根据id获取用户
 func GetUserById(id int) (*User, error) {
 	var user User
 	err := db.Where("id = ?", id).First(&user).Error

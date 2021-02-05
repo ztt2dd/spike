@@ -48,6 +48,15 @@ type Redis struct {
 
 var RedisSetting = &Redis{}
 
+// kafka
+type Kafka struct {
+	Host     string
+	User     string
+	Password string
+}
+
+var KafkaSetting = &Kafka{}
+
 var cfg *ini.File
 
 // Setup initialize the configuration instance
@@ -62,6 +71,7 @@ func Setup() {
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
 	mapTo("redis", RedisSetting)
+	mapTo("kafka", KafkaSetting)
 
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second

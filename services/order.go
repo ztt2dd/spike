@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"spikeKill/models"
+	"spikeKill/pkg/e"
+	"spikeKill/pkg/kafka"
 	"spikeKill/pkg/redis"
 	"spikeKill/services/cacheService"
 )
@@ -25,7 +27,7 @@ func AddOrder(productId int, userId int) (int, error) {
 		return -3, nil
 	}
 	// 5. 将创建订单的接口放入队列中
-	err := DeductionLocalStock(productId, userId)
+	err := DeductionKafkaStock(productId, userId)
 	if err != nil {
 		log.Println("生成订单失败：", err)
 		return -4, err
@@ -87,7 +89,18 @@ func DeductionRedisStock(productId int) bool {
 	return false
 }
 
-// 生成订单并进行本地库存的扣减
-func DeductionLocalStock(productId int, userId int) error {
-	return models.CreateLocalOrder(productId, userId)
+func DeductionKafkaStock(productId int, userId int) error {
+	order := &models.Order{
+		ProductId: productId,
+		UserId:    userId,
+	}
+	orderJson, err := json.Marshal(order)
+	if err != nil {
+		return err
+	}
+	err = kafka.Producer(e.ORDER_TOPIC, string(orderJson))
+	if err != nil {
+		return err
+	}
+	return nil
 }

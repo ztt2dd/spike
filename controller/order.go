@@ -8,10 +8,12 @@ import (
 	"spikeKill/pkg/e"
 	"spikeKill/services"
 	"strconv"
+	"time"
 )
 
 // 生成订单
 func AddOrder(c *gin.Context) {
+	startTime := time.Now()
 	appG := app.Gin{C: c}
 	code := e.SUCCESS
 	productIdStr := c.Query("productId")
@@ -30,5 +32,7 @@ func AddOrder(c *gin.Context) {
 		log.Println("生成订单出错result：", result)
 		code = e.ERROR
 	}
+	elapsed := time.Since(startTime)
+	log.Println("生成订单接口执行时间：", elapsed)
 	appG.Response(http.StatusOK, code, nil)
 }

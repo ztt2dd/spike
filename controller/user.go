@@ -9,14 +9,12 @@ import (
 	"strconv"
 )
 
-var userService = new(services.UserService)
-
 // 新增用户
 func AddUser(c *gin.Context) {
 	appG := app.Gin{C: c}
 	name := c.Query("name")
 	password := c.Query("password")
-	_, err := userService.AddUser(name, password)
+	_, err := services.AddUser(name, password)
 	code := e.SUCCESS
 	if err != nil {
 		code = e.ERROR
@@ -29,7 +27,7 @@ func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
 	name := c.Query("name")
 	password := c.Query("password")
-	user, err := userService.GetAuth(name, password)
+	user, err := services.GetAuth(name, password)
 	code := e.SUCCESS
 	if err != nil {
 		code = e.ERROR_LOGIN
@@ -45,7 +43,7 @@ func GetUser(c *gin.Context) {
 	if err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 	}
-	user, err := userService.GetUserInfo(id)
+	user, err := services.GetUserInfo(id)
 	code := e.SUCCESS
 	if err != nil {
 		code = e.ERROR_AUTH

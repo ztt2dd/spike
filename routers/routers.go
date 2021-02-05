@@ -40,8 +40,6 @@ func InitRouter() *gin.Engine {
 		// apiProduct.POST("/delProduct/:id", controller.DelProduct)
 		// 修改指定商品
 		apiProduct.POST("/updateProduct", controller.UpdateProduct)
-		// 查寻指定商品
-		apiProduct.GET("/selectProduct/:id", controller.SelectProduct)
 		// 分页查寻全部商品
 		apiProduct.GET("/selectProductAll", controller.SelectProductAll)
 	}
