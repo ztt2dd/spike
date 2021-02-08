@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -16,20 +17,20 @@ func AddOrder(c *gin.Context) {
 	startTime := time.Now()
 	appG := app.Gin{C: c}
 	code := e.SUCCESS
-	productIdStr := c.Query("productId")
+	productIdStr := c.PostForm("productId")
 	productId, err := strconv.Atoi(productIdStr)
 	if err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 	}
-	userIdStr := c.Query("userId")
+	userIdStr := c.PostForm("userId")
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
 		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
 	}
 	result, err := services.AddOrder(productId, userId)
+	fmt.Println("生成订单返回结果result：", result)
 	if err != nil || result != 1 {
 		log.Println("生成订单出错err：", err)
-		log.Println("生成订单出错result：", result)
 		code = e.ERROR
 	}
 	elapsed := time.Since(startTime)

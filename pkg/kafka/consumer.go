@@ -44,7 +44,7 @@ ConsumerLoop:
 	for {
 		select {
 		case msg := <-partitionConsumer.Messages():
-			var order *models.Order
+			var order *models.Orders
 			json.Unmarshal(msg.Value, &order)
 			err := DeductionLocalStock(order.ProductId, order.UserId)
 			if err != nil {
@@ -62,7 +62,7 @@ ConsumerLoop:
 
 func DeductionLocalStock(productId int, userId int) error {
 	orderSn := snowflake.GetSnowflakeId()
-	order := &models.Order{
+	order := &models.Orders{
 		ProductId: productId,
 		UserId:    userId,
 		OrderSn:   orderSn,

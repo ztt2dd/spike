@@ -23,7 +23,7 @@ func UpdateProduct(id int, data map[string]interface{}) (int, error) {
 	return 1, nil
 }
 
-func SelectProductById(id int) (*models.Product, error) {
+func SelectProductById(id int) (*models.Products, error) {
 	product, err := models.GetProductById(id)
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func SelectProductById(id int) (*models.Product, error) {
 	return product, nil
 }
 
-func SelectProductByPage(pageNum int, pageSize int, name string) ([]*models.Product, error) {
+func SelectProductByPage(pageNum int, pageSize int, name string) ([]*models.Products, error) {
 	products, err := models.GetProductByPage(pageNum, pageSize, name)
 	if err != nil {
 		return nil, err

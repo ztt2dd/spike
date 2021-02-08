@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Order struct {
+type Orders struct {
 	ID        int   `json:"id"`
 	ProductId int   `json:"productId"`
 	UserId    int   `json:"userId"`
@@ -15,7 +15,7 @@ type Order struct {
 }
 
 // 通过事务的方式去创建订单
-func CreateLocalOrder(order *Order) error {
+func CreateLocalOrder(order *Orders) error {
 	product, err := GetProductById(order.ProductId)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func CreateLocalOrder(order *Order) error {
 		}
 
 		// 通过乐观锁的方式修改商品的库存信息
-		tx = tx.Model(&Product{}).Where("id = ? and product_num = ?", order.ProductId, product.ProductNum).Updates(map[string]interface{}{"product_num": product.ProductNum - 1})
+		tx = tx.Model(&Products{}).Where("id = ? and product_num = ?", order.ProductId, product.ProductNum).Updates(map[string]interface{}{"product_num": product.ProductNum - 1})
 		err := tx.Error
 		if err != nil {
 			return err

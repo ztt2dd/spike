@@ -6,6 +6,15 @@
 2. 数据库：mariaDB/spike.sql
 3. 配置conf/app.ini文件
 
+## 框架集成
+1. gin
+2. jwt
+3. gorm
+4. redis
+5. mariaDb
+6. kafka
+
+
 ## 服务器部署
 > 通过docker进行部署
 

@@ -10,7 +10,7 @@ import (
 )
 
 type User struct {
-	User  *models.User
+	User  *models.Users
 	Token string `json:"token"`
 }
 
@@ -54,9 +54,9 @@ func GetAuth(name string, password string) (*User, error) {
 	return nil, nil
 }
 
-func GetUserInfo(id int) (*models.User, error) {
+func GetUserInfo(id int) (*models.Users, error) {
 	key := cacheService.GetUserKey(id)
-	var user *models.User
+	var user *models.Users
 	userRData, err := redis.GetData(key)
 	if err != nil {
 		log.Printf("用户数据从redis获取失败：%d", id)

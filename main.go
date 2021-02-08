@@ -27,7 +27,6 @@ func server() {
 	writeTimeout := setting.ServerSetting.WriteTimeout
 	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
 	maxHeaderBytes := 1 << 20
-
 	server := &http.Server{
 		Addr:           endPoint,
 		Handler:        routersInit,
@@ -38,6 +37,7 @@ func server() {
 
 	log.Printf("[info] start http server listening %s", endPoint)
 
+	// gin的run也是调用的http的ListenAndServe，所以本质上没啥区别
 	server.ListenAndServe()
 }
 

@@ -21,6 +21,7 @@ func Setup() error {
 	RedisConn = &redis.Pool{
 		MaxIdle:     setting.RedisSetting.MaxIdle,
 		MaxActive:   setting.RedisSetting.MaxActive,
+		Wait:        true,
 		IdleTimeout: setting.RedisSetting.IdleTimeout,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", setting.RedisSetting.Host)
@@ -107,7 +108,7 @@ func Lock(key string) error {
 	defer conn.Close()
 
 	ts := time.Now() // 设置一个随机事件值
-	v, err := conn.Do("SET", key, ts, "EX", 1, "NX")
+	v, err := conn.Do("SET", key, ts, "EX", 2, "NX")
 	if err != nil {
 		return err
 	}
